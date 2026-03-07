@@ -12,10 +12,18 @@ fi
 
 echo "Releasing version $VERSION..."
 
-# Update version in main package.json
-# Note: pnpm version works better with workspaces
-echo "Updating versions..."
-pnpm version $VERSION --no-git-tag-version
+# Update version in all packages
+echo "Updating versions across monorepo..."
+pnpm -C packages/core version $VERSION --no-git-tag-version
+pnpm -C packages/web version $VERSION --no-git-tag-version
+pnpm -C packages/react version $VERSION --no-git-tag-version
+pnpm -C packages/agent version $VERSION --no-git-tag-version
+pnpm -C packages/mcp version $VERSION --no-git-tag-version
+pnpm -C packages/docs-site version $VERSION --no-git-tag-version
+pnpm -C packages/create-grain version $VERSION --no-git-tag-version
+pnpm -C packages/cli version $VERSION --no-git-tag-version
+pnpm -C packages/mcp-server version $VERSION --no-git-tag-version
+npm version $VERSION --no-git-tag-version --workspace-root
 
 # Commit and Tag
 git add .
