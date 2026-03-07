@@ -32,19 +32,15 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install dependencies
-        run: |
-          cd docs
-          pnpm install
+        run: pnpm install
 
       - name: Build
-        run: |
-          cd docs
-          pnpm build
+        run: pnpm --filter @grain.sh/docs-site build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/.vitepress/dist
+          path: packages/docs-site/dist
 
   deploy:
     needs: build

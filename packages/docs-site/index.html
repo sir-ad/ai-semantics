@@ -38,8 +38,23 @@
         </div>
       </div>
       <div class="hero-visual">
-        <div class="grain-preview-container glass">
-          <div id="grain-render-target"></div>
+        <div class="playground-container glass">
+          <div class="playground-pane editor-pane">
+            <div class="pane-header">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+              <span class="pane-title">grain-source.gl</span>
+            </div>
+            <textarea id="grain-editor" spellcheck="false" placeholder="Type Grain primitives here..."></textarea>
+          </div>
+          <div class="playground-divider"></div>
+          <div class="playground-pane render-pane">
+            <div class="pane-header">
+              <span class="pane-title">Live Preview</span>
+            </div>
+            <div id="grain-render-target"></div>
+          </div>
         </div>
       </div>
     </section>

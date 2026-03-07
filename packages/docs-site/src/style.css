@@ -172,17 +172,91 @@ h1 {
   background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
 }
 
-.grain-preview-container {
-  padding: 4px;
-  min-height: 480px;
+.playground-container {
+  display: flex;
+  flex-direction: row;
+  height: 520px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.6);
+}
+
+.playground-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.pane-header {
+  height: 40px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot.red {
+  background: #ff5f56;
+}
+
+.dot.yellow {
+  background: #ffbd2e;
+}
+
+.dot.green {
+  background: #27c93f;
+}
+
+.pane-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 48px;
+  /* Offset the dots for true center */
+}
+
+#grain-editor {
+  flex: 1;
+  background: transparent;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  border: none;
+  padding: 24px;
+  resize: none;
+  line-height: 1.5;
+  outline: none;
+}
+
+#grain-editor::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.playground-divider {
+  width: 1px;
+  background: var(--glass-border);
+}
+
+.render-pane {
+  background: rgba(10, 10, 10, 0.6);
 }
 
 #grain-render-target {
-  padding: 48px;
+  padding: 24px;
   height: 100%;
-  border-radius: calc(var(--border-radius) - 4px);
-  background: var(--bg);
+  overflow-y: auto;
 }
 
 /* Features */

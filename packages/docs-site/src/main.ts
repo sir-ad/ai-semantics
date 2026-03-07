@@ -29,8 +29,20 @@ const exampleGrain = `<message role="assistant">
 </message>`;
 
 const target = document.getElementById('grain-render-target');
-if (target) {
+const editor = document.getElementById('grain-editor') as HTMLTextAreaElement;
+
+if (target && editor) {
+  // Set initial content
+  editor.value = exampleGrain;
+
+  // Initial render
   adapter.render(exampleGrain, { container: target });
+
+  // Live update on typing
+  editor.addEventListener('input', (e) => {
+    const rawCode = (e.target as HTMLTextAreaElement).value;
+    adapter.render(rawCode, { container: target });
+  });
 }
 
 // Typewriter effect for the installation command
