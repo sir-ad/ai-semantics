@@ -32,7 +32,7 @@ jobs:
       - name: Build Docs Site
         run: |
           cd packages/docs-site
-          pnpm build
+          VITE_BASE_PATH=/grain/ pnpm build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
