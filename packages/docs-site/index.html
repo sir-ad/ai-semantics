@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="./src/style.css">
 </head>
@@ -29,10 +29,11 @@
   <main>
     <section class="hero">
       <div class="hero-content">
-        <h1 class="reveal-text">Less, but better.</h1>
-        <p class="subtitle">The standard vocabulary for the interface between AI and Human.</p>
+        <h1 class="reveal-text">Precision in<br>every interaction.</h1>
+        <p class="subtitle">The universal interaction layer for AI interfaces.</p>
         <div class="cta-group">
-          <code class="one-line-command">npx create-grain-app@latest</code>
+          <span class="prompt-symbol">❯</span>
+          <code class="one-line-command" id="typewriter-command">pnpm add @grain/web</code>
           <button class="primary-btn" onclick="copyCommand()">Copy</button>
         </div>
       </div>
@@ -43,64 +44,67 @@
       </div>
     </section>
 
-    <section id="spec" class="features">
+    <section id="features" class="features">
       <div class="feature-grid">
-        <div class="feature-item">
-          <h3>Universal</h3>
-          <p>One syntax for Web, CLI, and Agent protocols.</p>
+        <div class="feature-item glass">
+          <div class="feature-icon">✦</div>
+          <h3>Universal Protocol</h3>
+          <p>A unified vocabulary that translates seamlessly across Web, CLI, and Agent-to-Agent communication.</p>
         </div>
-        <div class="feature-item">
-          <h3>Pico</h3>
-          <p>~15KB, zero dependencies. Pure performance.</p>
+        <div class="feature-item glass">
+          <div class="feature-icon">⚡</div>
+          <h3>Meridian Engine</h3>
+          <p>Extreme performance with a zero-dependency core. Decoupling logic from presentation with surgical
+            precision.</p>
         </div>
-        <div class="feature-item">
-          <h3>Open</h3>
-          <p>Built on standards. Extensible by design.</p>
+        <div class="feature-item glass">
+          <div class="feature-icon">◈</div>
+          <h3>Primitive First</h3>
+          <p>Extensible components designed for the future of AI reasoning. Think, stream, and act with clarity.</p>
         </div>
       </div>
-      <section id="docs" class="docs-section">
-        <div class="docs-content">
-          <h2>The Grain Specification (Alpha)</h2>
-          <div class="doc-card glass">
-            <h3>Meridian Layer Architecture</h3>
-            <p>Grain operates at the Meridian Layer—the intersection of model output and interface rendering. It
-              decouples <em>what</em> an agent wants to do from <em>how</em> it is presented.</p>
-          </div>
+    </section>
 
-          <div class="doc-grid">
-            <div class="doc-item">
-              <h4><code class="tag">&lt;stream&gt;</code></h4>
-              <p>Handles partial content and streaming states. Supports <code>speed</code>, <code>mode</code>, and
-                <code>cursor</code> attributes.
-              </p>
-            </div>
-            <div class="doc-item">
-              <h4><code class="tag">&lt;think&gt;</code></h4>
-              <p>Encapsulates internal reasoning steps. Can be made <code>visible="true|false"</code> based on UI
-                preference.</p>
-            </div>
-            <div class="doc-item">
-              <h4><code class="tag">&lt;tool&gt;</code></h4>
-              <p>Formalizes tool execution. Attributes: <code>name</code>, <code>args</code>, <code>status</code>
-                (pending, running, success, error).</p>
-            </div>
-            <div class="doc-item">
-              <h4><code class="tag">&lt;artifact&gt;</code></h4>
-              <p>Persistent document blocks. Ideal for code, markdown, or rich data visualizations.</p>
-            </div>
+    <section id="docs" class="docs-section">
+      <div class="docs-content">
+        <h2>Grain Specification</h2>
+        <div class="doc-card glass">
+          <h3>The Meridian Architecture</h3>
+          <p>Grain lives at the Meridian—the threshold where machine intelligence manifests as human experience. By
+            formalizing this layer, we create interfaces that are not just reactive, but truly representative of the
+            underlying reasoning.</p>
+        </div>
+
+        <div class="doc-grid">
+          <div class="doc-item glass">
+            <h4><code class="tag">&lt;think&gt;</code></h4>
+            <p>Transparency in reasoning. Encapsulate internal steps with visibility controls.</p>
+          </div>
+          <div class="doc-item glass">
+            <h4><code class="tag">&lt;stream&gt;</code></h4>
+            <p>Fluid updates. High-precision attributes for character-by-character manifestation.</p>
+          </div>
+          <div class="doc-item glass">
+            <h4><code class="tag">&lt;tool&gt;</code></h4>
+            <p>Formalized action. Standardized schemas for execution and error handling.</p>
+          </div>
+          <div class="doc-item glass">
+            <h4><code class="tag">&lt;layout&gt;</code></h4>
+            <p>Structural integrity. Adaptive containers for complex multi-modal responses.</p>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
   </main>
 
   <footer class="minimal-footer">
-    <p>&copy; 2026 Grain. Precision in every primitive.</p>
+    <p>&copy; 2026 Grain Language. Built for the era of intelligence.</p>
   </footer>
 
   <script type="module" src="./src/main.ts"></script>
   <script>
     function copyCommand() {
-      navigator.clipboard.writeText('npx create-grain-app@latest');
+      navigator.clipboard.writeText('pnpm add @grain/web');
       const btn = document.querySelector('.primary-btn');
       btn.textContent = 'Copied';
       setTimeout(() => btn.textContent = 'Copy', 2000);
