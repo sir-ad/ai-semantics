@@ -73,7 +73,7 @@ export class Validator {
     if (node.attributes) {
       for (const [attrName, attrValue] of Object.entries(node.attributes)) {
         const attrDef = primitive.attributes[attrName];
-        
+
         if (!attrDef) {
           errors.push({
             message: `Unknown attribute: ${attrName}`,
@@ -83,9 +83,8 @@ export class Validator {
         }
 
         // Type check
-        const actualType = typeof attrValue;
         const expectedType = attrDef.type;
-        
+
         if (expectedType === 'boolean' && typeof attrValue !== 'boolean') {
           errors.push({
             message: `Attribute ${attrName} must be boolean`,
@@ -126,11 +125,11 @@ export class Validator {
     const { GLangParser } = require('./parser');
     const parser = new GLangParser({ validate: false });
     const result = parser.parse(grainString);
-    
+
     if (!result.ast) {
       return { valid: false, errors: result.errors };
     }
-    
+
     return this.validate(result.ast);
   }
 }

@@ -3,19 +3,17 @@
  * Renders G-Lang to semantic HTML
  */
 
-import { GLangParser, EventBus, createExtensionRegistry } from 'grain';
-import type { ASTNode, WebAdapterConfig, RenderOptions } from './types';
+import { GLangParser, EventBus, type ASTNode } from 'grain';
+import type { WebAdapterConfig, RenderOptions } from './types';
 
 export class WebAdapter {
   private parser: GLangParser;
   private eventBus: EventBus;
-  private extensions: ReturnType<typeof createExtensionRegistry>;
   private config: WebAdapterConfig;
-  
+
   constructor(config: WebAdapterConfig = {}) {
     this.parser = new GLangParser();
     this.eventBus = new EventBus();
-    this.extensions = createExtensionRegistry();
     this.config = {
       theme: {
         '--grain-primary': '#000000',
@@ -47,16 +45,16 @@ export class WebAdapter {
    */
   render(grain: string, options: RenderOptions = {}): HTMLElement | null {
     const result = this.parser.parse(grain);
-    
+
     if (!result.ast || result.errors.length > 0) {
       console.error('Parse errors:', result.errors);
       return null;
     }
 
-    const container = options.container 
-      ? (typeof options.container === 'string' 
-          ? document.querySelector(options.container) 
-          : options.container)
+    const container = options.container
+      ? (typeof options.container === 'string'
+        ? document.querySelector(options.container)
+        : options.container)
       : document.createElement('div');
 
     if (!container) {
@@ -64,142 +62,92 @@ export class WebAdapter {
       return null;
     }
 
-    const html = this.renderAST(result.ast);
-    
+    const fragment = document.createDocumentFragment();
+    this.renderAST(result.ast, fragment);
+
     if (options.position === 'prepend') {
-      container.insertAdjacentHTML('afterbegin', html);
+      container.prepend(fragment);
     } else if (options.position === 'before') {
-      container.insertAdjacentHTML('beforebegin', html);
+      container.parentNode?.insertBefore(fragment, container);
     } else if (options.position === 'after') {
-      container.insertAdjacentHTML('afterend', html);
+      container.parentNode?.insertBefore(fragment, container.nextSibling);
     } else {
-      container.innerHTML = html;
+      container.innerHTML = '';
+      container.appendChild(fragment);
     }
 
-    this.attachEventListeners(container);
-    return container;
+    return container as HTMLElement;
   }
 
   /**
-   * Render AST to HTML string
+   * Render G-Lang AST to HTML DOM Elements
    */
-  private renderAST(node: ASTNode): string {
-    if (!node) return '';
+  private renderAST(node: ASTNode, documentParent: DocumentFragment | HTMLElement): void {
+    if (!node) return;
+
     if (node.type === 'document') {
-      return node.children?.map(child => this.renderAST(child)).join('') || '';
+      node.children?.forEach((child: ASTNode) => this.renderAST(child, documentParent));
+      return;
     }
+
     if (node.type === 'text') {
-      return node.value || '';
+      documentParent.appendChild(document.createTextNode(node.value || ''));
+      return;
     }
 
-    switch (node.type) {
-      case 'message': return this.renderMessage(node);
-      case 'stream': return this.renderStream(node);
-      case 'think': return this.renderThink(node);
-      case 'tool': return this.renderTool(node);
-      case 'artifact': return this.renderArtifact(node);
-      case 'context': return this.renderContext(node);
-      case 'approve': return this.renderApprove(node);
-      case 'error': return this.renderError(node);
-      case 'input': return this.renderInput(node);
-      case 'action': return this.renderAction(node);
-      case 'branch': return this.renderBranch(node);
-      case 'state': return this.renderState(node);
-      default: return this.renderUnknown(node);
+    // Map known primitives to Web Components (Prefix with 'grain-')
+    let tagName = 'div';
+    const knownPrimitives = ['message', 'stream', 'think', 'tool', 'artifact', 'context', 'approve', 'error', 'input', 'action', 'branch', 'state', 'form', 'chart', 'memory', 'layout', 'table'];
+
+    if (knownPrimitives.includes(node.type)) {
+      tagName = `grain-${node.type}`;
     }
-  }
 
-  private renderMessage(node: ASTNode): string {
-    const role = node.attributes?.role || 'assistant';
-    const isStreaming = node.attributes?.stream === 'true';
-    const children = node.children?.map(c => this.renderAST(c)).join('') || '';
-    return `<grain-message class="${role}${isStreaming ? ' streaming' : ''}" role="${role}">${children}</grain-message>`;
-  }
+    const el = document.createElement(tagName);
 
-  private renderStream(node: ASTNode): string {
-    const speed = node.attributes?.speed || 'normal';
-    const cursor = node.attributes?.cursor !== 'false';
-    const children = node.children?.map(c => this.renderAST(c)).join('') || '';
-    return `<grain-stream class="${speed}" ${cursor ? 'cursor' : ''} data-speed="${speed}">${children}</grain-stream>`;
-  }
-
-  private renderThink(node: ASTNode): string {
-    const visible = node.attributes?.visible === 'true';
-    const children = node.children?.map(c => this.renderAST(c)).join('') || '';
-    return `<grain-think class="${visible ? 'visible' : 'hidden'}">${children}</grain-think>`;
-  }
-
-  private renderTool(node: ASTNode): string {
-    const name = node.attributes?.name || 'unknown';
-    const status = node.attributes?.status || 'pending';
-    const children = node.children?.map(c => this.renderAST(c)).join('') || '';
-    return `<grain-tool class="${status}" data-name="${name}" data-status="${status}">${children}</grain-tool>`;
-  }
-
-  private renderArtifact(node: ASTNode): string {
-    const type = node.attributes?.type || 'text';
-    const title = node.attributes?.title || '';
-    const language = node.attributes?.language || '';
-    const children = node.children?.map(c => this.renderAST(c)).join('') || '';
-    return `<grain-artifact class="${type}" data-type="${type}" data-language="${language}" ${title ? `title="${title}"` : ''}>${children}</grain-artifact>`;
-  }
-
-  private renderContext(node: ASTNode): string {
-    const type = node.attributes?.type || 'file';
-    const id = node.attributes?.id || '';
-    const name = node.attributes?.name || '';
-    return `<grain-context class="${type}" data-id="${id}" data-type="${type}">${name}</grain-context>`;
-  }
-
-  private renderApprove(node: ASTNode): string {
-    const action = node.attributes?.action || '';
-    const warning = node.attributes?.warning || '';
-    const children = node.children?.map(c => this.renderAST(c)).join('') || '';
-    return `<grain-approve data-action="${action}">${warning ? `<warning>${warning}</warning>` : ''}${children}</grain-approve>`;
-  }
-
-  private renderError(node: ASTNode): string {
-    const code = node.attributes?.code || 'UNKNOWN';
-    const message = node.children?.map(c => this.renderAST(c)).join('') || '';
-    return `<grain-error data-code="${code}">${message}</grain-error>`;
-  }
-
-  private renderInput(node: ASTNode): string {
-    const placeholder = node.attributes?.placeholder || '';
-    const multiline = node.attributes?.multiline === 'true';
-    const children = node.children?.map(c => this.renderAST(c)).join('') || '';
-    return `<grain-input class="${multiline ? 'multiline' : ''}">${multiline ? `<textarea placeholder="${placeholder}"></textarea>` : `<input type="text" placeholder="${placeholder}" />`}${children}</grain-input>`;
-  }
-
-  private renderAction(node: ASTNode): string {
-    const name = node.attributes?.name || '';
-    const label = node.attributes?.label || name;
-    return `<button class="grain-action" data-action="${name}">${label}</button>`;
-  }
-
-  private renderBranch(node: ASTNode): string {
-    const id = node.attributes?.id || '';
-    const label = node.attributes?.label || '';
-    const children = node.children?.map(c => this.renderAST(c)).join('') || '';
-    return `<grain-branch data-id="${id}" ${label ? `label="${label}"` : ''}>${children}</grain-branch>`;
-  }
-
-  private renderState(node: ASTNode): string {
-    const status = node.attributes?.status || 'idle';
-    return `<grain-state data-status="${status}"></grain-state>`;
-  }
-
-  private renderUnknown(node: ASTNode): string {
-    const children = node.children?.map(c => this.renderAST(c)).join('') || '';
-    return `<div class="unknown" data-type="${node.type}">${children}</div>`;
-  }
-
-  private attachEventListeners(container: HTMLElement): void {
-    container.querySelectorAll('.grain-action').forEach(el => {
-      el.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        this.eventBus.emit('action', { action: target.dataset.action });
+    // Apply attributes
+    if (node.attributes) {
+      Object.entries(node.attributes).forEach(([key, value]) => {
+        el.setAttribute(key, String(value));
       });
+    }
+
+    // Attach specific behaviors based on type
+    if (node.type === 'action') {
+      el.classList.add('grain-action');
+      const actionName = node.attributes?.name || '';
+      el.addEventListener('click', () => {
+        this.eventBus.emit('action', { action: actionName });
+      });
+    }
+
+    // Recursively append children
+    node.children?.forEach((child: ASTNode) => this.renderAST(child, el));
+
+    documentParent.appendChild(el);
+  }
+
+  /**
+   * Register Native Web Components
+   */
+  public registerCustomElements() {
+    if (typeof customElements === 'undefined') return;
+
+    const primitives = ['message', 'stream', 'think', 'tool', 'artifact', 'context', 'approve', 'error', 'input', 'action', 'branch', 'state', 'form', 'chart', 'memory', 'layout', 'table'];
+
+    primitives.forEach(prim => {
+      const name = `grain-${prim}`;
+      if (!customElements.get(name)) {
+        customElements.define(name, class extends HTMLElement {
+          connectedCallback() {
+            // Internal lifecycle logic can be injected here
+            // e.g. streaming cursors, visibility toggles for 'think'
+            if (prim === 'think' && this.getAttribute('visible') !== 'true') {
+              this.style.display = 'none';
+            }
+          }
+        });
+      }
     });
   }
 

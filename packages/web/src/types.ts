@@ -2,8 +2,6 @@
  * Web Adapter Types
  */
 
-import type { ASTNode } from 'grain';
-
 export interface WebAdapterConfig {
   theme?: Record<string, string>;
   classPrefix?: string;

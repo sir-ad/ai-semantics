@@ -41,7 +41,7 @@ const ANSI = {
 export class CLIAdapter {
   private parser: GLangParser;
   private theme: 'light' | 'dark';
-  
+
   constructor(options: { theme?: 'light' | 'dark' } = {}) {
     this.parser = new GLangParser();
     this.theme = options.theme || 'light';
@@ -131,7 +131,7 @@ export class CLIAdapter {
 async function main() {
   const args = process.argv.slice(2);
   const options: CLIOptions = {};
-  
+
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--input' || args[i] === '-i') options.input = args[++i];
     else if (args[i] === '--watch' || args[i] === '-w') options.watch = true;
@@ -139,7 +139,7 @@ async function main() {
   }
 
   const adapter = new CLIAdapter({ theme: options.theme });
-  
+
   if (options.input) {
     const content = readFileSync(resolve(options.input), 'utf-8');
     console.clear();
@@ -153,7 +153,7 @@ async function main() {
   }
 }
 
-export { CLIAdapter };
+
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(console.error);

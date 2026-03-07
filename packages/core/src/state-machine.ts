@@ -3,7 +3,7 @@
  * Manages state transitions for primitives
  */
 
-import type { StateTransition, StateMachineConfig, StateChangeEvent } from './types';
+import type { StateMachineConfig, StateChangeEvent } from './types';
 
 export class StateMachine {
   private config: StateMachineConfig;
@@ -22,13 +22,13 @@ export class StateMachine {
   transition(event: string, payload?: Record<string, unknown>): StateChangeEvent {
     const fromState = this.current;
     const allowedTransitions = this.config.transitions[fromState];
-    
+
     if (!allowedTransitions) {
       throw new Error(`No transitions defined from state: ${fromState}`);
     }
 
     const toState = allowedTransitions[event];
-    
+
     if (!toState) {
       throw new Error(`Invalid transition: ${fromState} --${event}--> (no target)`);
     }
@@ -149,6 +149,30 @@ export const STATE_MACHINES = {
       denied: {},
       expired: {},
       complete: {}
+    }
+  },
+
+  form: {
+    initial: 'idle',
+    states: ['idle', 'editing', 'validating', 'submitting', 'success', 'error'],
+    transitions: {
+      idle: { 'edit': 'editing' },
+      editing: { 'validate': 'validating', 'submit': 'submitting' },
+      validating: { 'success': 'editing', 'error': 'error', 'submit': 'submitting' },
+      submitting: { 'success': 'success', 'error': 'error' },
+      success: { 'reset': 'idle' },
+      error: { 'edit': 'editing', 'submit': 'submitting' }
+    }
+  },
+
+  data: {
+    initial: 'loading',
+    states: ['loading', 'ready', 'error', 'updating'],
+    transitions: {
+      loading: { 'load': 'ready', 'error': 'error' },
+      ready: { 'update': 'updating' },
+      updating: { 'load': 'ready', 'error': 'error' },
+      error: { 'retry': 'loading' }
     }
   }
 } as const;

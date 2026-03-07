@@ -3,14 +3,14 @@
   "version": "1.0.0-alpha.1",
   "description": "Web adapter for Grain - Universal AI interaction layer",
   "type": "module",
-  "main": "./dist/grain-web.js",
-  "module": "./dist/grain-web.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "vite build && tsc",
+    "build": "tsup",
     "dev": "vite",
     "test": "vitest run",
     "clean": "rm -rf dist"
@@ -32,5 +32,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/sir-ad/grain.git"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.3.3",
+    "vite": "^7.3.1"
   }
 }

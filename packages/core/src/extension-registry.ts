@@ -40,7 +40,7 @@ export class ExtensionRegistry {
     if (extension?.primitives) {
       for (const primitiveName of Object.keys(extension.primitives)) {
         this.primitiveOverrides.delete(primitiveName);
-      });
+      }
     }
     this.extensions.delete(name);
   }
@@ -245,6 +245,71 @@ export const BUILTIN_PRIMITIVES: Record<string, PrimitiveDefinition> = {
       { name: 'branch.expand' },
       { name: 'branch.activate' },
       { name: 'branch.merge' }
+    ]
+  },
+  form: {
+    type: 'form',
+    attributes: {
+      action: { type: 'string', required: true },
+      method: { type: 'string', required: false, default: 'POST' },
+      schema: { type: 'string', required: false }
+    },
+    states: ['idle', 'editing', 'validating', 'submitting', 'success', 'error'],
+    events: [
+      { name: 'form.submit' },
+      { name: 'form.change' },
+      { name: 'form.error' }
+    ]
+  },
+  chart: {
+    type: 'chart',
+    attributes: {
+      type: { type: 'string', required: true },
+      title: { type: 'string', required: false },
+      data: { type: 'string', required: true }
+    },
+    states: ['loading', 'ready', 'error', 'updating'],
+    events: [
+      { name: 'chart.update' },
+      { name: 'chart.error' }
+    ]
+  },
+  table: {
+    type: 'table',
+    attributes: {
+      columns: { type: 'string', required: true },
+      sortable: { type: 'boolean', required: false, default: false },
+      pagination: { type: 'boolean', required: false, default: false }
+    },
+    states: ['loading', 'ready', 'error', 'updating'],
+    events: [
+      { name: 'table.sort' },
+      { name: 'table.paginate' }
+    ]
+  },
+  memory: {
+    type: 'memory',
+    attributes: {
+      key: { type: 'string', required: true },
+      scope: { type: 'string', required: false, default: 'session' },
+      action: { type: 'string', required: true }
+    },
+    states: ['loading', 'ready', 'error'],
+    events: [
+      { name: 'memory.read' },
+      { name: 'memory.write' }
+    ]
+  },
+  layout: {
+    type: 'layout',
+    attributes: {
+      type: { type: 'string', required: true },
+      gap: { type: 'string', required: false },
+      direction: { type: 'string', required: false }
+    },
+    states: ['ready'],
+    events: [
+      { name: 'layout.resize' }
     ]
   }
 };

@@ -3,8 +3,8 @@
  * Tools return G-Lang in JSON format
  */
 
-import { GLangParser, EventBus } from 'grain';
-import type { ASTNode, MCPAdapterConfig } from './types';
+import { GLangParser, EventBus, type ASTNode } from 'grain';
+import type { MCPAdapterConfig } from './types';
 
 export interface MCPToolResponse {
   semantic: 'tool';
@@ -24,6 +24,13 @@ export interface MCPContextAttachment {
   preview?: string;
   size?: number;
   mimeType?: string;
+}
+
+export interface MCPApprovalRequest {
+  semantic: 'approve';
+  id: string;
+  message: string;
+  status: 'pending' | 'approved' | 'denied';
 }
 
 export interface MCPAgentMessage {
@@ -48,16 +55,17 @@ export class MCPAdapter {
     this.config = config;
   }
 
-  toMCP(grain: string): MCPToolResponse | MCPAgentMessage | MCPContextAttachment | null {
+  toMCP(grain: string): MCPToolResponse | MCPAgentMessage | MCPContextAttachment | MCPApprovalRequest | null {
     const result = this.parser.parse(grain);
     if (!result.ast || result.errors.length > 0) return null;
     return this.astToMCP(result.ast);
   }
 
-  private astToMCP(node: ASTNode): MCPToolResponse | MCPAgentMessage | MCPContextAttachment | null {
+  private astToMCP(node: ASTNode): MCPToolResponse | MCPAgentMessage | MCPContextAttachment | MCPApprovalRequest | null {
     switch (node.type) {
       case 'tool': return this.toolToMCP(node);
       case 'context': return this.contextToMCP(node);
+      case 'approve': return this.approveToMCP(node);
       default: return null;
     }
   }
@@ -65,17 +73,17 @@ export class MCPAdapter {
   private toolToMCP(node: ASTNode): MCPToolResponse {
     const name = node.attributes?.name || 'unknown';
     const status = (node.attributes?.status as MCPToolResponse['status']) || 'pending';
-    
+
     let input: Record<string, unknown> = {};
     let output: unknown = undefined;
 
-    node.children?.forEach(child => {
+    node.children?.forEach((child: ASTNode) => {
       if (child.type === 'input') {
         const content = child.children?.[0]?.value || '';
-        content.split('\n').forEach(line => {
+        content.split('\n').forEach((line: string) => {
           const [key, ...valueParts] = line.split(':');
           if (key && valueParts.length > 0) {
-            result[key.trim()] = valueParts.join(':').trim();
+            input[key.trim()] = valueParts.join(':').trim();
           }
         });
       } else if (child.type === 'result') {
@@ -84,7 +92,7 @@ export class MCPAdapter {
     });
 
     if (node.attributes?.args) {
-      try { input = { ...input, ...JSON.parse(node.attributes.args) }; } catch {}
+      try { input = { ...input, ...JSON.parse(node.attributes.args) }; } catch { }
     }
 
     return { semantic: 'tool', name, input: Object.keys(input).length ? input : undefined, output, status };
@@ -102,10 +110,20 @@ export class MCPAdapter {
     };
   }
 
-  fromMCP(mcp: MCPToolResponse | MCPAgentMessage | MCPContextAttachment): string {
+  private approveToMCP(node: ASTNode): MCPApprovalRequest {
+    return {
+      semantic: 'approve',
+      id: node.attributes?.id || Math.random().toString(36).substring(7),
+      message: node.children?.[0]?.value || '',
+      status: (node.attributes?.status as MCPApprovalRequest['status']) || 'pending'
+    };
+  }
+
+  fromMCP(mcp: MCPToolResponse | MCPAgentMessage | MCPContextAttachment | MCPApprovalRequest): string {
     switch (mcp.semantic) {
       case 'tool': return this.mcpToolToGrain(mcp);
       case 'context': return this.mcpContextToGrain(mcp);
+      case 'approve': return this.mcpApproveToGrain(mcp);
       default: return '';
     }
   }
@@ -123,6 +141,10 @@ export class MCPAdapter {
     let attrs = `type="${mcp.type}" id="${mcp.id}"`;
     if (mcp.name) attrs += ` name="${mcp.name}"`;
     return `<context ${attrs} />`;
+  }
+
+  private mcpApproveToGrain(mcp: MCPApprovalRequest): string {
+    return `<approve id="${mcp.id}" status="${mcp.status}">${mcp.message}</approve>`;
   }
 
   private objectToAttrs(obj: Record<string, unknown>): string {

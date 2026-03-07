@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grain | The Universal Interaction Layer</title>
+  <meta name="description" content="The standard vocabulary for every surface where AI meets humans. Minimalist, precise, and universal G-Lang primitives.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+  <nav class="glass-nav">
+    <div class="nav-content">
+      <span class="logo">Grain</span>
+      <div class="nav-links">
+        <a href="#spec">Spec</a>
+        <a href="#github">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="reveal-text">Less, but better.</h1>
+        <p class="subtitle">The standard vocabulary for the interface between AI and Human.</p>
+        <div class="cta-group">
+          <code class="one-line-command">npx create-grain-app@latest</code>
+          <button class="primary-btn" onclick="copyCommand()">Copy</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="grain-preview-container glass">
+          <div id="grain-render-target"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="spec" class="features">
+      <div class="feature-grid">
+        <div class="feature-item">
+          <h3>Universal</h3>
+          <p>One syntax for Web, CLI, and Agent protocols.</p>
+        </div>
+        <div class="feature-item">
+          <h3>Pico</h3>
+          <p>~15KB, zero dependencies. Pure performance.</p>
+        </div>
+        <div class="feature-item">
+          <h3>Open</h3>
+          <p>Built on standards. Extensible by design.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="minimal-footer">
+    <p>&copy; 2026 Grain. Precision in every primitive.</p>
+  </footer>
+
+  <script type="module" src="./src/main.ts"></script>
+  <script>
+    function copyCommand() {
+      navigator.clipboard.writeText('npx create-grain-app@latest');
+      const btn = document.querySelector('.primary-btn');
+      btn.textContent = 'Copied';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+  </script>
+</body>
+</html>

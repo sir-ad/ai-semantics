@@ -3,25 +3,30 @@
  */
 
 // Primitive Types
-export type PrimitiveType = 
-  | 'stream' 
-  | 'think' 
-  | 'tool' 
-  | 'artifact' 
-  | 'input' 
-  | 'context' 
-  | 'state' 
-  | 'error' 
-  | 'approve' 
+export type PrimitiveType =
+  | 'stream'
+  | 'think'
+  | 'tool'
+  | 'artifact'
+  | 'input'
+  | 'context'
+  | 'state'
+  | 'error'
+  | 'approve'
   | 'branch'
   | 'message'
-  | 'action';
+  | 'action'
+  | 'form'
+  | 'chart'
+  | 'memory'
+  | 'layout'
+  | 'table';
 
-export type PrimitiveStatus = 
-  | 'idle' 
-  | 'loading' 
-  | 'generating' 
-  | 'streaming' 
+export type PrimitiveStatus =
+  | 'idle'
+  | 'loading'
+  | 'generating'
+  | 'streaming'
   | 'thinking'
   | 'running'
   | 'pending'
@@ -56,7 +61,7 @@ export interface ParserOptions {
 // State Machine Types
 export interface StateMachineConfig {
   initial: string;
-  states: string[];
+  states: readonly string[];
   transitions: Record<string, Record<string, string>>;
 }
 
