@@ -13,12 +13,9 @@ fi
 echo "Releasing version $VERSION..."
 
 # Update version in main package.json
-npm version $VERSION --no-git-tag-version
-
-# (Optional) Update versions in all packages if not using changesets
-# This is a simple implementation; real monorepos might use pnpm version or changesets
-echo "Updating workspace packages..."
-pnpm -r exec npm version $VERSION --no-git-tag-version
+# Note: pnpm version works better with workspaces
+echo "Updating versions..."
+pnpm version $VERSION --no-git-tag-version
 
 # Commit and Tag
 git add .
