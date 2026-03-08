@@ -13,14 +13,14 @@
 <html>
 <head>
   <title>AI Semantics Demo</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ai-semantics/web@1.0.0/dist/ai-semantics-web.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@grain.sh/web@1.0.0/dist/grain-web.css">
 </head>
 <body>
   <div id="app"></div>
   
-  <script src="https://cdn.jsdelivr.net/npm/@ai-semantics/web@1.0.0/dist/ai-semantics-web.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@grain.sh/web@1.0.0/dist/grain-web.js"></script>
   <script>
-    const adapter = new AISemantics.WebAdapter();
+    const adapter = new GrainAdapter.WebAdapter();
     
     // Render a simple message
     adapter.render(`<message role="assistant">
@@ -36,14 +36,14 @@
 ### Web (npm)
 
 ```bash
-npm install @ai-semantics/core @ai-semantics/web
+npm install @grain.sh/core @grain.sh/web
 ```
 
 ```javascript
-import { AISemantics } from '@ai-semantics/web';
-import '@ai-semantics/web/dist/ai-semantics-web.css';
+import { GrainAdapter } from '@grain.sh/web';
+import '@grain.sh/web/dist/grain-web.css';
 
-const adapter = new AISemantics.WebAdapter();
+const adapter = new GrainAdapter.WebAdapter();
 
 // Simple message
 adapter.render(`<message role="assistant">
@@ -54,7 +54,7 @@ adapter.render(`<message role="assistant">
 ### CLI
 
 ```bash
-npm install -g @ai-semantics/cli
+npm install -g @grain.sh/cli
 
 # Render G-Lang in terminal
 ai-sem render --input chat.glang
@@ -63,19 +63,19 @@ ai-sem render --input chat.glang
 ### React
 
 ```bash
-npm install @ai-semantics/react
+npm install @grain.sh/react
 ```
 
 ```jsx
-import { AISemanticsProvider, Message, Stream, Tool } from '@ai-semantics/react';
+import { GrainAdapterProvider, Message, Stream, Tool } from '@grain.sh/react';
 
 function App() {
   return (
-    <AISemanticsProvider>
+    <GrainAdapterProvider>
       <Message role="assistant">
         <Stream speed="normal">Hello!</Stream>
       </Message>
-    </AISemanticsProvider>
+    </GrainAdapterProvider>
   );
 }
 ```
@@ -209,7 +209,7 @@ function quickSort(arr) {
 <html>
 <head>
   <title>AI Chat</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ai-semantics/web@1.0.0/dist/ai-semantics-web.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@grain.sh/web@1.0.0/dist/grain-web.css">
   <style>
     #chat {
       max-width: 600px;
@@ -228,9 +228,9 @@ function quickSort(arr) {
 <body>
   <div id="chat"></div>
   
-  <script src="https://cdn.jsdelivr.net/npm/@ai-semantics/web@1.0.0/dist/ai-semantics-web.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@grain.sh/web@1.0.0/dist/grain-web.js"></script>
   <script>
-    const adapter = new AISemantics.WebAdapter({
+    const adapter = new GrainAdapter.WebAdapter({
       theme: {
         '--ai-primary': '#007bff',
         '--ai-radius': '8px'
@@ -295,7 +295,7 @@ function quickSort(arr) {
 ### Installation
 
 ```bash
-npm install -g @ai-semantics/cli
+npm install -g @grain.sh/cli
 ```
 
 ### Render G-Lang File
@@ -343,14 +343,14 @@ ai-sem render --input example.glang --output output.txt
 ### Setup
 
 ```bash
-npm install @ai-semantics/react
+npm install @grain.sh/react
 ```
 
 ### Components
 
 ```jsx
 import { 
-  AISemanticsProvider,
+  GrainAdapterProvider,
   Message,
   Stream,
   Think,
@@ -358,7 +358,7 @@ import {
   Artifact,
   Input,
   Actions
-} from '@ai-semantics/react';
+} from '@grain.sh/react';
 
 function Chat() {
   const [messages, setMessages] = useState([]);
@@ -378,7 +378,7 @@ function Chat() {
   };
   
   return (
-    <AISemanticsProvider>
+    <GrainAdapterProvider>
       <div className="chat">
         {messages.map((msg, i) => (
           <Message key={i} role={msg.role}>
@@ -392,7 +392,7 @@ function Chat() {
           onSubmit={handleSend}
         />
       </div>
-    </AISemanticsProvider>
+    </GrainAdapterProvider>
   );
 }
 ```
@@ -404,7 +404,7 @@ function Chat() {
 ### Theme Customization
 
 ```javascript
-const adapter = new AISemantics.WebAdapter({
+const adapter = new GrainAdapter.WebAdapter({
   theme: {
     '--ai-primary': '#6366f1',
     '--ai-secondary': '#8b5cf6',
@@ -442,6 +442,6 @@ adapter.registerPrimitive('my-chart', {
 
 ## Getting Help
 
-- Discord: https://discord.gg/ai-semantics
-- GitHub Issues: https://github.com/sir-ad/ai-semantics/issues
+- Discord: https://github.com/sir-ad/grain
+- GitHub Issues: https://github.com/sir-ad/grain/issues
 - Twitter: @ai_semantics

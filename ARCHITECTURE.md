@@ -442,7 +442,7 @@ export const crmExtension = {
 ## Directory Structure
 
 ```
-ai-semantics/
+grain/
 ├── core/                      # Core runtime
 │   ├── parser.js              # G-Lang parser
 │   ├── validator.js           # Schema validation
@@ -504,10 +504,10 @@ ai-semantics/
 
 | Package | Target Size |
 |---------|-------------|
-| `@ai-semantics/core` | < 10KB |
-| `@ai-semantics/web` | < 15KB |
-| `@ai-semantics/cli` | < 8KB |
-| `@ai-semantics/mcp` | < 5KB |
+| `@grain.sh/core` | < 10KB |
+| `@grain.sh/web` | < 15KB |
+| `@grain.sh/cli` | < 8KB |
+| `@grain.sh/mcp` | < 5KB |
 
 ### Lazy Loading
 
